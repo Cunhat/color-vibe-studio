@@ -1,0 +1,136 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --font-sans: "Satoshi", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+:root {
+  --radius: 0.5rem;
+  --background: oklch(100% 0 0);
+  --foreground: oklch(16.5% 0.01 264);
+  --card: oklch(100% 0 0);
+  --card-foreground: oklch(16.5% 0.01 264);
+  --popover: oklch(100% 0 0);
+  --popover-foreground: oklch(16.5% 0.01 264);
+  --primary: oklch(67.5% 0.22 306);
+  --primary-foreground: oklch(98% 0.01 240);
+  --secondary: oklch(95% 0.01 264);
+  --secondary-foreground: oklch(22% 0.01 264);
+  --muted: oklch(95% 0.01 264);
+  --muted-foreground: oklch(48% 0.01 264);
+  --accent: oklch(95% 0.01 264);
+  --accent-foreground: oklch(22% 0.01 264);
+  --destructive: oklch(62% 0.21 29);
+  --destructive-foreground: oklch(98% 0 0);
+  --border: oklch(90% 0.01 264);
+  --input: oklch(90% 0.01 264);
+  --ring: oklch(67.5% 0.22 306);
+}
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+
+@utility gradient-text {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-violet-500;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-Variable.woff2") format("woff2");
+  font-weight: 300 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+@utility container {
+  margin-inline: auto;
+  padding-inline: 1rem;
+
+  @media (width >= theme(--breakpoint-sm)) {
+    padding-inline: 2rem;
+  }
+}
+
+
+@utility drawing-animation {
+  path {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: draw 2s forwards;
+  }
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@utility floating {
+  animation: floating 3s ease-in-out infinite;
+}
+
+@keyframes floating {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@utility blob-animation {
+  animation: blob 8s infinite;
+}
+
+@keyframes blob {
+  0% {
+    border-radius: 60% 40% 30% 70%/60% 30% 70% 40%;
+  }
+  50% {
+    border-radius: 30% 60% 70% 40%/50% 60% 30% 60%;
+  }
+  100% {
+    border-radius: 60% 40% 30% 70%/60% 30% 70% 40%;
+  }
+}
