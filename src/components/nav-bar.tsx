@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { PenIcon, BookIcon } from "lucide-react";
 import Link from "next/link";
 
-const Navbar = () => {
+export default function Navbar() {
   return (
     <header className="border-border/40 bg-background/95 supports-[backdrop-filter]:bg-background/60 border-b backdrop-blur">
       <div className="container flex h-16 items-center justify-between">
@@ -66,6 +66,4 @@ const Navbar = () => {
       </div>
     </header>
   );
-};
-
-export default Navbar;
+}
