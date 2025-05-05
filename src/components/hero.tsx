@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { PenToolIcon, SparklesIcon } from "lucide-react";
+import { Link, PenToolIcon, SparklesIcon } from "lucide-react";
 
 const Hero = () => {
   return (
@@ -21,8 +21,8 @@ const Hero = () => {
                 <SparklesIcon className="h-4 w-4" />
                 Start Creating
               </Button>
-              <Button size="lg" variant="outline">
-                View Examples
+              <Button size="lg" variant="outline" asChild>
+                <a href="/#examples">View Examples</a>
               </Button>
             </div>
           </div>
