@@ -70,3 +70,37 @@ export const bookImageRelations = relations(bookImage, ({ one }) => ({
     references: [image.id],
   }),
 }));
+
+export const prompt = createTable("prompt", (d) => ({
+  id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
+  prompt: d.varchar({ length: 256 }),
+  createdAt: d
+    .timestamp({ withTimezone: true })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+}));
+
+export const promptImage = createTable("prompt_image", (d) => ({
+  id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
+  promptId: d.integer().references(() => prompt.id),
+  imageId: d.integer().references(() => image.id),
+  createdAt: d
+    .timestamp({ withTimezone: true })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+}));
+
+export const promptRelations = relations(prompt, ({ one }) => ({
+  images: one(promptImage),
+}));
+
+export const promptImageRelations = relations(promptImage, ({ one }) => ({
+  prompt: one(prompt, {
+    fields: [promptImage.promptId],
+    references: [prompt.id],
+  }),
+  image: one(image, {
+    fields: [promptImage.imageId],
+    references: [image.id],
+  }),
+}));
