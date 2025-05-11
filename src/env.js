@@ -10,6 +10,7 @@ export const env = createEnv({
     DATABASE_URL: z.string().url(),
     GEMINI_API: z.string(),
     OPEN_AI_API: z.string(),
+    UPLOADTHING_TOKEN: z.string(),
   },
 
   /**
@@ -29,6 +30,7 @@ export const env = createEnv({
     DATABASE_URL: process.env.DATABASE_URL,
     GEMINI_API: process.env.GEMINI_API,
     OPEN_AI_API: process.env.OPEN_AI_API,
+    UPLOADTHING_TOKEN: process.env.UPLOADTHING_TOKEN,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**
