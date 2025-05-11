@@ -5,10 +5,9 @@ import { createTRPCRouter, publicProcedure } from "../trpc";
 import { GoogleGenAI } from "@google/genai";
 import fs from "fs";
 import { UTApi } from "uploadthing/server";
+import { prompt } from "@/lib/utils";
 
-export const utapi = new UTApi({
-  // ...options,
-});
+export const utapi = new UTApi({});
 
 const openai = new OpenAI({
   apiKey: env.OPEN_AI_API,
@@ -19,24 +18,11 @@ export const imageGenerationRouter = createTRPCRouter({
     .input(z.object({ prompt: z.string() }))
     .mutation(async ({ ctx, input }) => {
       try {
-        const prompt = `
-You are an AI artist specialized in creating high-quality, engaging colouring pages from text prompts. Your output is designed for educators, publishers, parents creating activities for children, and creative hobbyists seeking personalized coloring content.
-
-Core Objective: Create a black and white line art image suitable for printing and coloring.
-
-Key Requirements & Style Guidelines for the Colouring Page:
-1.  Image Type: Single Image: Output must be a single, standalone image. Do not generate grids, multiple variations, or collages.
-2.  Background: Solid White: The background must be entirely and uniformly white. No textures, gradients, or off-white shades.
-3.  Line Art Quality: Clear & Crisp: Lines must be black, clear, crisp, and well-defined.
-   
-Your Task:
-Carefully analyze the user's input below and generate a colouring page that adheres to all the above requirements and guidelines. Prioritize "colorability" and clarity.
-User Prompt: ${input.prompt}
-`;
+        const promptBuilder = prompt(input.prompt);
 
         // const result = await openai.images.generate({
         //   model: "gpt-image-1",
-        //   prompt,
+        //   promptBuilder,
         //   size: "1536x1024",
         //   quality: "medium",
         //   response_format: "b64_json",
