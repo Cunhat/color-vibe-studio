@@ -10,14 +10,12 @@ import { index, pgTableCreator } from "drizzle-orm/pg-core";
  *
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
-export const createTable = pgTableCreator(
-  (name) => `color-vibe-studio_${name}`,
-);
+export const createTable = pgTableCreator((name) => `${name}`);
 
 export const posts = createTable(
   "post",
   (d) => ({
-    id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
+    id: d.uuid("id").primaryKey().defaultRandom().notNull(),
     name: d.varchar({ length: 256 }),
     createdAt: d
       .timestamp({ withTimezone: true })
@@ -29,7 +27,7 @@ export const posts = createTable(
 );
 
 export const image = createTable("image", (d) => ({
-  id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
+  id: d.uuid("id").primaryKey().defaultRandom().notNull(),
   url: d.varchar({ length: 256 }),
   createdAt: d
     .timestamp({ withTimezone: true })
@@ -38,7 +36,7 @@ export const image = createTable("image", (d) => ({
 }));
 
 export const book = createTable("book", (d) => ({
-  id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
+  id: d.uuid("id").primaryKey().defaultRandom().notNull(),
   title: d.varchar({ length: 256 }),
   createdAt: d
     .timestamp({ withTimezone: true })
@@ -47,9 +45,9 @@ export const book = createTable("book", (d) => ({
 }));
 
 export const bookImage = createTable("book_image", (d) => ({
-  id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
-  bookId: d.integer().references(() => book.id),
-  imageId: d.integer().references(() => image.id),
+  id: d.uuid("id").primaryKey().defaultRandom().notNull(),
+  bookId: d.uuid().references(() => book.id),
+  imageId: d.uuid().references(() => image.id),
   createdAt: d
     .timestamp({ withTimezone: true })
     .default(sql`CURRENT_TIMESTAMP`)
@@ -72,18 +70,20 @@ export const bookImageRelations = relations(bookImage, ({ one }) => ({
 }));
 
 export const prompt = createTable("prompt", (d) => ({
-  id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
+  id: d.uuid("id").primaryKey().defaultRandom().notNull(),
   prompt: d.varchar({ length: 256 }),
   createdAt: d
     .timestamp({ withTimezone: true })
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
+  updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
+  isReady: d.boolean().default(false),
 }));
 
 export const promptImage = createTable("prompt_image", (d) => ({
-  id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
-  promptId: d.integer().references(() => prompt.id),
-  imageId: d.integer().references(() => image.id),
+  id: d.uuid("id").primaryKey().defaultRandom().notNull(),
+  promptId: d.uuid("prompt_id").references(() => prompt.id),
+  imageId: d.uuid("image_id").references(() => image.id),
   createdAt: d
     .timestamp({ withTimezone: true })
     .default(sql`CURRENT_TIMESTAMP`)
