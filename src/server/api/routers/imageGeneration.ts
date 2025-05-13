@@ -8,6 +8,7 @@ import { UTApi } from "uploadthing/server";
 import { prompt } from "@/lib/utils";
 import dayjs from "dayjs";
 import { prompt as promptTable } from "@/server/db/schema";
+import { api } from "@/trpc/server";
 
 export const utapi = new UTApi({});
 
