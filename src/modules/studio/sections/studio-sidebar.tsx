@@ -35,11 +35,12 @@ function StudioSidebarSuspense() {
             <ArrowLeft className="mr-1 h-4 w-4" />
             <span className="font-medium">Back</span>
           </Link>
-          <div className="flex items-center">
-            <History className="text-muted-foreground mr-1 h-4 w-4" />
-            <span className="text-sm font-medium">Image History</span>
-          </div>
         </div>
+        <Link href="/studio">
+          <Button variant="default" className="w-full">
+            New Image
+          </Button>
+        </Link>
       </SidebarHeader>
 
       <SidebarContent>
