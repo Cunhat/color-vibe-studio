@@ -12,6 +12,13 @@ export const promptRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       return await ctx.db.query.prompt.findFirst({
         where: eq(prompt.id, input.id),
+        with: {
+          images: {
+            with: {
+              image: true,
+            },
+          },
+        },
       });
     }),
 });
