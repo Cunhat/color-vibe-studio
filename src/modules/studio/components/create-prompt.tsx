@@ -3,16 +3,26 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { api } from "@/trpc/react";
 import { LoaderIcon, SendIcon } from "lucide-react";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 
 export default function CreatePrompt() {
   const [prompt, setPrompt] = useState("");
+  const ref = useRef<HTMLTextAreaElement>(null);
   const utils = api.useUtils();
+  const router = useRouter();
+
+  useEffect(() => {
+    ref.current?.focus();
+  }, [ref]);
 
   const generateImageMutation = api.imageGeneration.generateImage.useMutation({
     onSuccess: (data) => {
-      console.log(data);
-      utils.prompt.getPrompts.invalidate();
+      if (data && data[0]) {
+        utils.prompt.getPrompts.invalidate();
+        utils.prompt.getPromptById.setData({ id: data[0].id }, data[0]);
+        router.push(`/studio/${data[0].id}`);
+      }
     },
   });
 
@@ -33,6 +43,7 @@ export default function CreatePrompt() {
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             onKeyDown={handleKeyDown}
+            ref={ref}
           />
           <Button
             className="absolute right-2 bottom-2"
