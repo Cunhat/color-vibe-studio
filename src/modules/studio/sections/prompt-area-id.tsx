@@ -16,7 +16,7 @@ export function PromptAreaId({ id }: PromptAreaIdProps) {
 }
 
 function PromptAreaIdSuspense({ id }: PromptAreaIdProps) {
-  const [refetch, setRefetch] = useState(false);
+  const [refetch, setRefetch] = useState<number | false>(false);
   const [prompt, { isSuccess }] = api.prompt.getPromptById.useSuspenseQuery(
     { id },
     {
