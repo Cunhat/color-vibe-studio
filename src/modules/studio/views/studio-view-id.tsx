@@ -3,6 +3,7 @@ import NoImageGenerated from "../components/no-image-generated";
 import { PromptArea } from "../sections/prompt-area";
 import { StudioSidebar } from "../sections/studio-sidebar";
 import { PromptAreaId } from "../sections/prompt-area-id";
+import { GeneratedImage } from "../components/generated-image";
 
 export default function StudioViewId({ id }: { id: string }) {
   return (
@@ -14,7 +15,7 @@ export default function StudioViewId({ id }: { id: string }) {
             <PromptAreaId id={id} />
             <div className="bg-secondary/30 flex w-2/3 flex-col">
               <div className="relative flex flex-grow items-center justify-center p-10">
-                <NoImageGenerated />
+                <GeneratedImage id={id} />
               </div>
             </div>
           </div>

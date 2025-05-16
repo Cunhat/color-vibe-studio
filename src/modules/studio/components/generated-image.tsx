@@ -8,72 +8,36 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { BookIcon, DownloadIcon, ZoomInIcon, ZoomOutIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
+import type { Image } from "@/lib/schemas";
+import { api } from "@/trpc/react";
 
-interface GeneratedImage {
+type GeneratedImageProps = {
   id: string;
-  url: string;
-  prompt: string;
-  timestamp: number;
+};
+
+export function GeneratedImage({ id }: GeneratedImageProps) {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <GeneratedImageSuspense id={id} />
+    </Suspense>
+  );
 }
 
-interface Book {
-  id: string;
-  title: string;
-  description: string;
-  createdAt: string;
-  images: string[];
-}
-
-export default function GeneratedImage() {
-  const [imageHistory, setImageHistory] = useState<GeneratedImage[]>([]);
-  const [currentImageIndex, setCurrentImageIndex] = useState(-1);
+function GeneratedImageSuspense({ id }: GeneratedImageProps) {
   const [scale, setScale] = useState(1);
-  const [showBookDialog, setShowBookDialog] = useState(false);
-  const [books, setBooks] = useState<Book[]>([]);
 
-  // Load books from localStorage when component mounts
-  useEffect(() => {
-    const storedBooks = JSON.parse(
-      localStorage.getItem("coloringBooks") || "[]",
-    );
-    setBooks(storedBooks);
-  }, []);
+  const [prompt] = api.prompt.getPromptById.useSuspenseQuery({
+    id: id,
+  });
+
+  const image = prompt?.images?.image;
 
   const handleDownload = () => {
-    if (currentImageIndex === -1 || !imageHistory.length) {
-      toast.error("No image to download");
-      return;
-    }
-
-    // In a real implementation, this would download the actual image
-    window.open(imageHistory[currentImageIndex].url, "_blank");
+    window.open(image?.url, "_blank");
     toast.success("Download started!");
-  };
-
-  const handleSaveToBook = (bookId: string) => {
-    if (currentImageIndex === -1 || !imageHistory.length) {
-      toast.error("No image to save");
-      return;
-    }
-
-    // Get books from localStorage
-    const storedBooks = JSON.parse(
-      localStorage.getItem("coloringBooks") || "[]",
-    );
-    const bookIndex = storedBooks.findIndex((b: Book) => b.id === bookId);
-
-    if (bookIndex !== -1) {
-      // Add the image to the book
-      storedBooks[bookIndex].images.push(imageHistory[currentImageIndex].url);
-      localStorage.setItem("coloringBooks", JSON.stringify(storedBooks));
-      toast.success("Image saved to book!");
-      setShowBookDialog(false);
-    } else {
-      toast.error("Book not found");
-    }
   };
 
   const handleZoomIn = () => {
@@ -83,6 +47,14 @@ export default function GeneratedImage() {
   const handleZoomOut = () => {
     setScale((prev) => Math.max(prev - 0.25, 0.5));
   };
+
+  if (!prompt?.isReady) {
+    return <div>Loading...</div>;
+  }
+
+  if (!prompt) {
+    return null;
+  }
 
   return (
     <>
@@ -114,12 +86,12 @@ export default function GeneratedImage() {
           variant="outline"
           size="sm"
           onClick={handleDownload}
-          disabled={!currentImage}
+          disabled={!image?.url}
         >
           <DownloadIcon className="mr-1 h-4 w-4" />
           Download
         </Button>
-        <Button
+        {/* <Button
           variant="outline"
           size="sm"
           onClick={() => setShowBookDialog(true)}
@@ -127,7 +99,7 @@ export default function GeneratedImage() {
         >
           <BookIcon className="mr-1 h-4 w-4" />
           Save to Book
-        </Button>
+        </Button> */}
       </div>
 
       <div
@@ -135,13 +107,13 @@ export default function GeneratedImage() {
         style={{ transform: `scale(${scale})` }}
       >
         <img
-          src={currentImage.url}
+          src={image?.url}
           alt="Generated line art"
           className="max-h-[70vh] rounded-lg object-contain shadow-lg"
         />
       </div>
       {/* Dialog for saving to book */}
-      <Dialog open={showBookDialog} onOpenChange={setShowBookDialog}>
+      {/* <Dialog open={showBookDialog} onOpenChange={setShowBookDialog}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Save to Book</DialogTitle>
@@ -183,7 +155,7 @@ export default function GeneratedImage() {
             )}
           </div>
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
     </>
   );
 }
