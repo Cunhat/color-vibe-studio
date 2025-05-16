@@ -13,6 +13,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 import type { Image } from "@/lib/schemas";
 import { api } from "@/trpc/react";
+import GeneratingImgLoader from "./generating-img-loader";
 
 type GeneratedImageProps = {
   id: string;
@@ -49,7 +50,7 @@ function GeneratedImageSuspense({ id }: GeneratedImageProps) {
   };
 
   if (!prompt?.isReady) {
-    return <div>Loading...</div>;
+    return <GeneratingImgLoader />;
   }
 
   if (!prompt) {
