@@ -17,8 +17,6 @@ export const imageGenerationRouter = createTRPCRouter({
 
         generateImage(input.prompt, dbPrompt[0]?.id || "");
 
-        console.log("dbPrompt ====>", dbPrompt);
-
         return dbPrompt;
       } catch (error) {
         console.error("Error generating image:", error);

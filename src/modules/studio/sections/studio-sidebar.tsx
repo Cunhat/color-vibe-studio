@@ -63,18 +63,20 @@ function StudioSidebarSuspense() {
           {title}
         </h3>
         <ul className="flex flex-col gap-1">
-          {prompts.map((prompt) => (
-            <li className="flex" key={prompt.id}>
-              <Link
-                href={`/studio/${prompt.id}`}
-                className="hover:bg-secondary h-9 w-full cursor-pointer rounded-md p-2 text-ellipsis transition-colors"
-              >
-                <button className="w-full cursor-pointer overflow-hidden text-left text-xs text-ellipsis whitespace-nowrap">
-                  {prompt.prompt}
-                </button>
-              </Link>
-            </li>
-          ))}
+          {prompts
+            .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+            .map((prompt) => (
+              <li className="flex" key={prompt.id}>
+                <Link
+                  href={`/studio/${prompt.id}`}
+                  className="hover:bg-secondary h-9 w-full cursor-pointer rounded-md p-2 text-ellipsis transition-colors"
+                >
+                  <button className="w-full cursor-pointer overflow-hidden text-left text-xs text-ellipsis whitespace-nowrap">
+                    {prompt.prompt}
+                  </button>
+                </Link>
+              </li>
+            ))}
         </ul>
       </div>
     );

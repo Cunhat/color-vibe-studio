@@ -77,6 +77,8 @@ export const prompt = createTable("prompt", (d) => ({
     .notNull(),
   updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
   isReady: d.boolean().default(false).notNull(),
+  isError: d.boolean().default(false).notNull(),
+  errorMessage: d.varchar({ length: 256 }),
 }));
 
 export const promptImage = createTable(

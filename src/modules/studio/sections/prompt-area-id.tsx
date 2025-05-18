@@ -28,9 +28,8 @@ function PromptAreaIdSuspense({ id }: PromptAreaIdProps) {
   );
 
   useEffect(() => {
-    console.log(prompt);
     if (isSuccess && prompt) {
-      setRefetch(!prompt.isReady ? 5000 : false);
+      setRefetch(!prompt.isReady ? 1000 * 60 : false);
     }
   }, [prompt]);
 

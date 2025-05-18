@@ -1,9 +1,7 @@
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import NoImageGenerated from "../components/no-image-generated";
-import { PromptArea } from "../sections/prompt-area";
-import { StudioSidebar } from "../sections/studio-sidebar";
-import { PromptAreaId } from "../sections/prompt-area-id";
 import { GeneratedImage } from "../components/generated-image";
+import { PromptAreaId } from "../sections/prompt-area-id";
+import { StudioSidebar } from "../sections/studio-sidebar";
 
 export default function StudioViewId({ id }: { id: string }) {
   return (

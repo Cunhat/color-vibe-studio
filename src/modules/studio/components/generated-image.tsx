@@ -7,13 +7,21 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { BookIcon, DownloadIcon, ZoomInIcon, ZoomOutIcon } from "lucide-react";
+import {
+  AlertTriangle,
+  BookIcon,
+  DownloadIcon,
+  RotateCcwIcon,
+  ZoomInIcon,
+  ZoomOutIcon,
+} from "lucide-react";
 import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
 import type { Image } from "@/lib/schemas";
 import { api } from "@/trpc/react";
 import GeneratingImgLoader from "./generating-img-loader";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 type GeneratedImageProps = {
   id: string;
@@ -57,9 +65,35 @@ function GeneratedImageSuspense({ id }: GeneratedImageProps) {
     return null;
   }
 
+  if (prompt.isError) {
+    return (
+      <div className="w-full max-w-md p-8 text-center">
+        <div className="relative">
+          {/* Error state container */}
+          <div className="bg-background/50 border-destructive/30 relative z-10 rounded-xl border p-8 shadow-xl backdrop-blur-md">
+            <div className="bg-destructive/10 mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full">
+              <AlertTriangle className="text-destructive h-10 w-10" />
+            </div>
+
+            <h3 className="text-destructive mb-2 text-2xl font-bold">
+              Generation Failed
+            </h3>
+
+            <Alert
+              variant="destructive"
+              className="bg-destructive/10 border-destructive/20 mb-6"
+            >
+              <AlertDescription>{prompt.errorMessage}</AlertDescription>
+            </Alert>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
-      <div className="absolute top-6 right-6 flex space-x-2">
+      {/* <div className="absolute top-6 right-6 flex space-x-2">
         <Button
           variant="outline"
           size="sm"
@@ -79,7 +113,7 @@ function GeneratedImageSuspense({ id }: GeneratedImageProps) {
         <span className="bg-secondary inline-flex items-center justify-center rounded px-2 text-sm">
           {Math.round(scale * 100)}%
         </span>
-      </div>
+      </div> */}
 
       {/* Image action buttons in the image area (right side) */}
       <div className="absolute right-6 bottom-6 flex space-x-2">
