@@ -11,6 +11,8 @@ export const env = createEnv({
     GEMINI_API: z.string(),
     OPEN_AI_API: z.string(),
     UPLOADTHING_TOKEN: z.string(),
+    GOOGLE_CLIENT_ID: z.string(),
+    GOOGLE_CLIENT_SECRET: z.string(),
   },
 
   /**
@@ -31,6 +33,8 @@ export const env = createEnv({
     GEMINI_API: process.env.GEMINI_API,
     OPEN_AI_API: process.env.OPEN_AI_API,
     UPLOADTHING_TOKEN: process.env.UPLOADTHING_TOKEN,
+    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**

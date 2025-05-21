@@ -1,8 +1,21 @@
 import { Button } from "@/components/ui/button";
-import { PenIcon, BookIcon } from "lucide-react";
+import { auth } from "@/server/auth";
+import { PenIcon } from "lucide-react";
+import { headers } from "next/headers";
 import Link from "next/link";
 
-export default function Navbar() {
+export default async function Navbar() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  async function signOut() {
+    "use server";
+    await auth.api.signOut({
+      headers: await headers(),
+    });
+  }
+
   return (
     <header className="border-border/40 bg-background/95 supports-[backdrop-filter]:bg-background/60 border-b backdrop-blur">
       <div className="container flex h-16 items-center justify-between">
@@ -28,19 +41,6 @@ export default function Navbar() {
           >
             Examples
           </a>
-          <Link
-            href="/generator"
-            className="hover:text-primary text-sm font-medium transition-colors"
-          >
-            Generator
-          </Link>
-          <Link
-            href="/books"
-            className="hover:text-primary flex items-center gap-1 text-sm font-medium transition-colors"
-          >
-            <BookIcon className="h-4 w-4" />
-            My Books
-          </Link>
           <a
             href="/#pricing"
             className="hover:text-primary text-sm font-medium transition-colors"
@@ -56,12 +56,19 @@ export default function Navbar() {
         </nav>
 
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="sm">
-            Sign In
-          </Button>
-          <Button size="sm" asChild>
-            <Link href="/generator">Try for Free</Link>
-          </Button>
+          {!session ? (
+            <>
+              <Button variant="ghost" size="sm" asChild>
+                <Link href="/signin">Sign In</Link>
+              </Button>
+            </>
+          ) : (
+            <form action={signOut}>
+              <Button variant="ghost" size="sm" type="submit">
+                Logout
+              </Button>
+            </form>
+          )}
         </div>
       </div>
     </header>
