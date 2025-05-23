@@ -87,7 +87,7 @@ function StudioSidebarSuspense() {
       <SidebarHeader>
         <div className="flex items-center justify-between px-4 py-2">
           <Link
-            href="/"
+            href="/dashboard"
             className="text-primary hover:text-primary/80 flex items-center"
           >
             <ArrowLeft className="mr-1 h-4 w-4" />

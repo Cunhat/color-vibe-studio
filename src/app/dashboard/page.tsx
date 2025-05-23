@@ -83,7 +83,7 @@ export default async function Dashboard() {
   //   }
 
   return (
-    <div className="container flex-1 px-4 py-8">
+    <div className="container flex-1 px-4 py-6">
       <div className="flex flex-col gap-8">
         {/* Header Section */}
         <div>
