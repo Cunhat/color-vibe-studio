@@ -8,7 +8,7 @@ import { env } from "@/env";
 import { api } from "@/trpc/server";
 import { db } from "../db";
 import { eq } from "drizzle-orm";
-import { image, promptImage, prompt as promptTable } from "@/server/db/schema";
+import { image, prompt as promptTable } from "@/server/db/schema";
 import { UTApi } from "uploadthing/server";
 
 type Error = {
@@ -21,7 +21,11 @@ const openai = new OpenAI({
 
 export const utapi = new UTApi({});
 
-export async function generateImage(input: string, promptId: string) {
+export async function generateImage(
+  input: string,
+  promptId: string,
+  userId: string,
+) {
   try {
     const promptBuilder = prompt(input);
     const result = await openai.images.generate({
@@ -30,8 +34,6 @@ export async function generateImage(input: string, promptId: string) {
       size: "1536x1024",
       quality: "medium",
     });
-
-    console.log("result ====>", result);
 
     if (result?.data?.[0]?.b64_json) {
       const image_base64 = result.data[0].b64_json;
@@ -71,17 +73,14 @@ export async function generateImage(input: string, promptId: string) {
         .insert(image)
         .values({
           url: imageUrl,
+          userId,
+          promptId,
         })
         .returning();
 
       if (!createImage[0]?.id) return;
 
-      const dbPrompt = await db.insert(promptImage).values({
-        imageId: createImage[0]?.id,
-        promptId: promptId,
-      });
-
-      const updatePrompt = await db
+      await db
         .update(promptTable)
         .set({
           isReady: true,

@@ -1,27 +1,11 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  AlertTriangle,
-  BookIcon,
-  DownloadIcon,
-  RotateCcwIcon,
-  ZoomInIcon,
-  ZoomOutIcon,
-} from "lucide-react";
-import { Suspense, useEffect, useState } from "react";
-import Link from "next/link";
-import { toast } from "sonner";
-import type { Image } from "@/lib/schemas";
-import { api } from "@/trpc/react";
-import GeneratingImgLoader from "./generating-img-loader";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { api } from "@/trpc/react";
+import { AlertTriangle, DownloadIcon } from "lucide-react";
+import { Suspense, useState } from "react";
+import { toast } from "sonner";
+import GeneratingImgLoader from "./generating-img-loader";
 
 type GeneratedImageProps = {
   id: string;
@@ -42,19 +26,11 @@ function GeneratedImageSuspense({ id }: GeneratedImageProps) {
     id: id,
   });
 
-  const image = prompt?.images?.image;
+  const image = prompt?.image;
 
   const handleDownload = () => {
     window.open(image?.url, "_blank");
     toast.success("Download started!");
-  };
-
-  const handleZoomIn = () => {
-    setScale((prev) => Math.min(prev + 0.25, 2));
-  };
-
-  const handleZoomOut = () => {
-    setScale((prev) => Math.max(prev - 0.25, 0.5));
   };
 
   if (!prompt?.isReady) {
@@ -93,28 +69,6 @@ function GeneratedImageSuspense({ id }: GeneratedImageProps) {
 
   return (
     <>
-      {/* <div className="absolute top-6 right-6 flex space-x-2">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={handleZoomOut}
-          disabled={scale <= 0.5}
-        >
-          <ZoomOutIcon className="h-4 w-4" />
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={handleZoomIn}
-          disabled={scale >= 2}
-        >
-          <ZoomInIcon className="h-4 w-4" />
-        </Button>
-        <span className="bg-secondary inline-flex items-center justify-center rounded px-2 text-sm">
-          {Math.round(scale * 100)}%
-        </span>
-      </div> */}
-
       {/* Image action buttons in the image area (right side) */}
       <div className="absolute right-6 bottom-6 flex space-x-2">
         <Button

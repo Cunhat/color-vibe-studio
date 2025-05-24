@@ -6,11 +6,15 @@
  * TL;DR - This is where all the tRPC server stuff is created and plugged in. The pieces you will
  * need to use are documented accordingly near the end.
  */
-import { initTRPC } from "@trpc/server";
+import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
 import { db } from "@/server/db";
+import { headers } from "next/headers";
+import { auth } from "../auth";
+import { eq } from "drizzle-orm";
+import { user } from "../db/schema";
 
 /**
  * 1. CONTEXT
@@ -25,8 +29,13 @@ import { db } from "@/server/db";
  * @see https://trpc.io/docs/server/context
  */
 export const createTRPCContext = async (opts: { headers: Headers }) => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
   return {
     db,
+    session,
     ...opts,
   };
 };
@@ -101,3 +110,34 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
  * are logged in.
  */
 export const publicProcedure = t.procedure.use(timingMiddleware);
+
+export const protectedProcedure = t.procedure.use(async ({ next, ctx }) => {
+  if (!ctx.session?.user?.id) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+
+  const userInfo = await ctx.db.query.user.findFirst({
+    where: eq(user.id, ctx.session.user.id),
+  });
+
+  if (!userInfo) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+
+  // Check if should reset user's token
+  // await resetToken(userInfo);
+
+  // const { success } = await ratelimit.limit(ctx.session.user.id);
+
+  // if (!success) {
+  //   throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
+  // }
+
+  return next({
+    ctx: {
+      ...ctx,
+      session: ctx.session,
+      user: userInfo,
+    },
+  });
+});

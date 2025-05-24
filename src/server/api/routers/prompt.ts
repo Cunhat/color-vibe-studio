@@ -1,23 +1,21 @@
-import { eq } from "drizzle-orm";
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { and, eq } from "drizzle-orm";
+import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { z } from "zod";
 import { prompt } from "@/server/db/schema";
 
 export const promptRouter = createTRPCRouter({
-  getPrompts: publicProcedure.query(async ({ ctx }) => {
-    return await ctx.db.query.prompt.findMany();
+  getPrompts: protectedProcedure.query(async ({ ctx }) => {
+    return await ctx.db.query.prompt.findMany({
+      where: eq(prompt.userId, ctx.user.id),
+    });
   }),
-  getPromptById: publicProcedure
+  getPromptById: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       return await ctx.db.query.prompt.findFirst({
-        where: eq(prompt.id, input.id),
+        where: and(eq(prompt.id, input.id), eq(prompt.userId, ctx.user.id)),
         with: {
-          images: {
-            with: {
-              image: true,
-            },
-          },
+          image: true,
         },
       });
     }),

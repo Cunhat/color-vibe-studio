@@ -87,6 +87,13 @@ export const image = createTable("image", (d) => ({
     .timestamp({ withTimezone: true })
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
+  userId: d
+    .text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  promptId: d
+    .uuid("prompt_id")
+    .references(() => prompt.id, { onDelete: "cascade" }),
 }));
 
 export const book = createTable("book", (d) => ({
@@ -97,6 +104,10 @@ export const book = createTable("book", (d) => ({
     .timestamp({ withTimezone: true })
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
+  userId: d
+    .text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
 }));
 
 export const bookImage = createTable(
@@ -148,47 +159,20 @@ export const prompt = createTable("prompt", (d) => ({
   isReady: d.boolean().default(false).notNull(),
   isError: d.boolean().default(false).notNull(),
   errorMessage: d.varchar({ length: 256 }),
+  userId: d
+    .text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
 }));
-
-export const promptImage = createTable(
-  "prompt_image",
-  (d) => ({
-    id: d.uuid("id").primaryKey().defaultRandom().notNull(),
-    promptId: d
-      .uuid("prompt_id")
-      .references(() => prompt.id, { onDelete: "cascade" })
-      .notNull(),
-    imageId: d
-      .uuid("image_id")
-      .references(() => image.id, { onDelete: "cascade" })
-      .notNull(),
-    createdAt: d
-      .timestamp({ withTimezone: true })
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-  }),
-  (t) => [
-    index("prompt_image_prompt_id_idx").on(t.promptId),
-    index("prompt_image_image_id_idx").on(t.imageId),
-  ],
-);
 
 export const promptRelations = relations(prompt, ({ one }) => ({
-  images: one(promptImage),
+  image: one(image),
 }));
 
-export const promptImageRelations = relations(promptImage, ({ one }) => ({
+export const imageRelations = relations(image, ({ one, many }) => ({
   prompt: one(prompt, {
-    fields: [promptImage.promptId],
+    fields: [image.promptId],
     references: [prompt.id],
   }),
-  image: one(image, {
-    fields: [promptImage.imageId],
-    references: [image.id],
-  }),
-}));
-
-export const imageRelations = relations(image, ({ many }) => ({
   bookImages: many(bookImage),
-  promptImages: many(promptImage),
 }));
