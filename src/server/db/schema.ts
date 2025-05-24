@@ -92,6 +92,7 @@ export const image = createTable("image", (d) => ({
 export const book = createTable("book", (d) => ({
   id: d.uuid("id").primaryKey().defaultRandom().notNull(),
   title: d.varchar({ length: 256 }).notNull(),
+  description: d.varchar({ length: 256 }).notNull(),
   createdAt: d
     .timestamp({ withTimezone: true })
     .default(sql`CURRENT_TIMESTAMP`)
