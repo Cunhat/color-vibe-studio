@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { book } from "@/server/db/schema";
+import { eq } from "drizzle-orm";
+import { desc } from "drizzle-orm";
 
 export const bookRouter = createTRPCRouter({
   createBook: protectedProcedure
@@ -11,9 +13,22 @@ export const bookRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      return await ctx.db.insert(book).values(input);
+      return await ctx.db.insert(book).values({
+        ...input,
+        userId: ctx.session.user.id,
+      });
     }),
   getBooks: protectedProcedure.query(async ({ ctx }) => {
-    return await ctx.db.query.book.findMany();
+    return await ctx.db.query.book.findMany({
+      where: eq(book.userId, ctx.session.user.id),
+      orderBy: [desc(book.createdAt)],
+    });
+  }),
+  getRecentBooks: protectedProcedure.query(async ({ ctx }) => {
+    return await ctx.db.query.book.findMany({
+      where: eq(book.userId, ctx.session.user.id),
+      orderBy: [desc(book.createdAt)],
+      limit: 3,
+    });
   }),
 });

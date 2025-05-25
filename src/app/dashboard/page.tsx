@@ -16,6 +16,7 @@ export default async function Dashboard() {
   }
 
   void api.image.getRecentImages.prefetch();
+  void api.book.getRecentBooks.prefetch();
 
   return (
     <HydrateClient>
