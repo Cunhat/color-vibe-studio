@@ -60,7 +60,7 @@ export default function QuickActionsSection() {
         </CardHeader>
         <CardFooter>
           <Button asChild variant="outline" className="w-full">
-            <Link href="/images">View Images</Link>
+            <Link href="/dashboard/images">View Images</Link>
           </Button>
         </CardFooter>
       </Card>
