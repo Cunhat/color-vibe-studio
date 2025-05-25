@@ -1,15 +1,11 @@
 "use client";
-import { BookIcon } from "lucide-react";
 
-import { CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Calendar, DownloadIcon, Grid3x3, ImageIcon, List } from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
-import Link from "next/link";
-import dayjs from "dayjs";
+import { Card, CardContent } from "@/components/ui/card";
 import type { ImageWithPrompt } from "@/lib/schemas";
+import dayjs from "dayjs";
+import { Calendar, DownloadIcon, ImageIcon } from "lucide-react";
+import Link from "next/link";
 
 type ImageViewSectionProps = {
   viewMode: "grid" | "list";
@@ -20,6 +16,40 @@ export default function ImageViewSection({
   viewMode,
   images,
 }: ImageViewSectionProps) {
+  async function handleDownload(image: ImageWithPrompt) {
+    try {
+      // Fetch the image as a blob
+      const response = await fetch(image.url);
+      if (!response.ok) throw new Error("Failed to fetch image");
+
+      const blob = await response.blob();
+
+      // Create a blob URL
+      const blobUrl = URL.createObjectURL(blob);
+
+      // Create a temporary anchor element and trigger download
+      const link = document.createElement("a");
+      link.href = blobUrl;
+
+      // Generate a filename based on the image ID and current timestamp
+      const filename = `image-${image.id}-${Date.now()}.png`;
+
+      link.download = filename;
+
+      // Append to body, click, and remove
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      // Clean up the blob URL
+      URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error("Download failed:", error);
+      // Fallback to opening in new tab if download fails
+      window.open(image.url, "_blank");
+    }
+  }
+
   if (images.length === 0)
     return (
       <Card className="p-12 text-center">
@@ -60,7 +90,7 @@ export default function ImageViewSection({
                 <Button
                   size="sm"
                   variant="secondary"
-                  //   onClick={() => handleDownload(image)}
+                  onClick={() => handleDownload(image)}
                 >
                   <DownloadIcon className="h-4 w-4" />
                 </Button>
@@ -118,7 +148,7 @@ export default function ImageViewSection({
                 <Button
                   size="sm"
                   variant="outline"
-                  //   onClick={() => handleDownload(image)}
+                  onClick={() => handleDownload(image)}
                 >
                   <DownloadIcon className="mr-1 h-4 w-4" />
                   Download
