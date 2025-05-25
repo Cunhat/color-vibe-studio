@@ -18,6 +18,7 @@ import {
 import Link from "next/link";
 import HeaderSection from "../sections/header-section";
 import QuickActionsSection from "../sections/quick-actions-section";
+import { RecentImagesSection } from "../sections/image/recent-images-section";
 
 interface Book {
   id: string;
@@ -118,66 +119,7 @@ export default function DashboardView({ user }: DashboardViewProps) {
         </div>
 
         {/* Recent Images */}
-        <div>
-          <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold">
-            <GalleryVerticalIcon className="h-5 w-5" />
-            Recent Images
-          </h2>
-
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {images.length > 0 ? (
-              images.slice(0, 4).map((image) => (
-                <Card
-                  key={image.id}
-                  className="overflow-hidden transition-shadow hover:shadow-md"
-                >
-                  <div className="bg-secondary/30 flex aspect-square items-center justify-center overflow-hidden">
-                    <img
-                      src={image.url}
-                      alt={image.prompt}
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                  <CardContent className="py-4">
-                    <p className="line-clamp-2 text-sm">{image.prompt}</p>
-                    <p className="text-muted-foreground mt-1 text-xs">
-                      {new Date(image.timestamp).toLocaleDateString()}
-                    </p>
-                  </CardContent>
-                </Card>
-              ))
-            ) : (
-              <Card className="col-span-full p-4 text-center">
-                <CardContent className="py-8">
-                  <ImageIcon className="text-muted-foreground/50 mx-auto mb-4 h-12 w-12" />
-                  <p className="text-muted-foreground">
-                    You haven't generated any images yet
-                  </p>
-                  <Button asChild className="mt-4">
-                    <Link href="/studio">Generate Your First Image</Link>
-                  </Button>
-                </CardContent>
-              </Card>
-            )}
-
-            {images.length > 0 && (
-              <Card className="bg-secondary/20 flex h-full items-center justify-center border-dashed">
-                <CardContent className="p-8 text-center">
-                  <Button
-                    asChild
-                    variant="ghost"
-                    className="flex h-full w-full flex-col gap-2"
-                  >
-                    <Link href="/studio">
-                      <ImageIcon className="text-primary/70 mx-auto mb-2 h-6 w-6" />
-                      <span>Generate More Images</span>
-                    </Link>
-                  </Button>
-                </CardContent>
-              </Card>
-            )}
-          </div>
-        </div>
+        <RecentImagesSection />
       </div>
     </div>
   );

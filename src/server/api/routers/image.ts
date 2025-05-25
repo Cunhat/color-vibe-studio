@@ -2,7 +2,7 @@ import z from "zod";
 import { createTRPCRouter } from "../trpc";
 
 import { protectedProcedure } from "../trpc";
-import { eq, type InferSelectModel } from "drizzle-orm";
+import { desc, eq, type InferSelectModel } from "drizzle-orm";
 import { image } from "@/server/db/schema";
 
 export const imageRouter = createTRPCRouter({
@@ -12,6 +12,18 @@ export const imageRouter = createTRPCRouter({
       with: {
         prompt: true,
       },
+      orderBy: [desc(image.createdAt)],
+    });
+  }),
+
+  getRecentImages: protectedProcedure.query(async ({ ctx }) => {
+    return await ctx.db.query.image.findMany({
+      where: eq(image.userId, ctx.session.user.id),
+      with: {
+        prompt: true,
+      },
+      orderBy: [desc(image.createdAt)],
+      limit: 3,
     });
   }),
 });
