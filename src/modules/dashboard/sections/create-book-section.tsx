@@ -46,6 +46,7 @@ type BookFormType = z.infer<typeof BookFormSchema>;
 
 export default function CreateBookSection() {
   const [open, setOpen] = useState(false);
+  const utils = api.useUtils();
 
   const form = useForm<BookFormType>({
     resolver: zodResolver(BookFormSchema),
@@ -59,6 +60,8 @@ export default function CreateBookSection() {
     onSuccess: () => {
       setOpen(false);
       form.reset();
+      utils.book.getBooks.invalidate();
+      utils.book.getRecentBooks.invalidate();
     },
   });
 

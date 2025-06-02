@@ -18,8 +18,6 @@ export function RecentBookSection() {
 function RecentBookSectionSuspense() {
   const [books] = api.book.getRecentBooks.useSuspenseQuery();
 
-  console.log(books);
-
   if (books.length === 0) {
     return (
       <Card className="col-span-full p-4 text-center">

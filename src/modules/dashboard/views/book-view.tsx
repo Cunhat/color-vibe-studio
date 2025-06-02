@@ -1,5 +1,6 @@
 import React from "react";
 import CreateBookSection from "../sections/create-book-section";
+import { BookList } from "../sections/book/book-list";
 
 export default function BookView() {
   return (
@@ -14,8 +15,7 @@ export default function BookView() {
 
         <CreateBookSection />
       </div>
-
-      {/* <BookList /> */}
+      <BookList />
     </div>
   );
 }
