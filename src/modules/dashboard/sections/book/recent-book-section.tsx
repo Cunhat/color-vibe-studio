@@ -18,6 +18,8 @@ export function RecentBookSection() {
 function RecentBookSectionSuspense() {
   const [books] = api.book.getRecentBooks.useSuspenseQuery();
 
+  console.log(books);
+
   if (books.length === 0) {
     return (
       <Card className="col-span-full p-4 text-center">
@@ -44,7 +46,7 @@ function RecentBookSectionSuspense() {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {books.map((book) => (
           <Link href={`/books/${book.id}`} key={book.id}>
-            <Card className="h-full overflow-hidden transition-shadow hover:shadow-md">
+            <Card className="h-full overflow-hidden py-0 transition-shadow hover:shadow-md">
               <div className="flex h-24 items-center justify-center bg-purple-50">
                 {book?.images?.length > 0 ? (
                   <div className="flex gap-1">
@@ -57,7 +59,7 @@ function RecentBookSectionSuspense() {
                   <BookIcon className="text-primary/30 h-8 w-8" />
                 )}
               </div>
-              <CardContent className="py-4">
+              <CardContent className="">
                 <h3 className="line-clamp-1 font-medium">{book.title}</h3>
                 <p className="text-muted-foreground mt-1 text-xs">
                   {new Date(book.createdAt).toLocaleDateString()}
@@ -73,7 +75,7 @@ function RecentBookSectionSuspense() {
               variant="ghost"
               className="flex h-full w-full flex-col gap-2"
             >
-              <Link href="/books">
+              <Link href="/dashboard/books">
                 <BookIcon className="text-primary/70 mx-auto mb-2 h-6 w-6" />
                 <span>View All Books</span>
               </Link>

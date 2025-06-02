@@ -21,12 +21,18 @@ export const bookRouter = createTRPCRouter({
   getBooks: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.db.query.book.findMany({
       where: eq(book.userId, ctx.session.user.id),
+      with: {
+        images: true,
+      },
       orderBy: [desc(book.createdAt)],
     });
   }),
   getRecentBooks: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.db.query.book.findMany({
       where: eq(book.userId, ctx.session.user.id),
+      with: {
+        images: true,
+      },
       orderBy: [desc(book.createdAt)],
       limit: 3,
     });

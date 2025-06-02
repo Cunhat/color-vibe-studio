@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Link, PenToolIcon, SparklesIcon } from "lucide-react";
+import { PenToolIcon, SparklesIcon } from "lucide-react";
 
 const Hero = () => {
   return (
