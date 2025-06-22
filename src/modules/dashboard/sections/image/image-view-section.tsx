@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import type { ImageWithPrompt } from "@/lib/schemas";
 import dayjs from "dayjs";
 import { Calendar, DownloadIcon, ImageIcon } from "lucide-react";
@@ -10,11 +11,15 @@ import Link from "next/link";
 type ImageViewSectionProps = {
   viewMode: "grid" | "list";
   images: ImageWithPrompt[];
+  selectedImage: Array<ImageWithPrompt["id"]>;
+  setSelectedImage: (image: Array<ImageWithPrompt["id"]>) => void;
 };
 
 export default function ImageViewSection({
   viewMode,
   images,
+  selectedImage,
+  setSelectedImage,
 }: ImageViewSectionProps) {
   async function handleDownload(image: ImageWithPrompt) {
     try {
@@ -50,6 +55,14 @@ export default function ImageViewSection({
     }
   }
 
+  function handleSelectImage(image: ImageWithPrompt) {
+    if (selectedImage.includes(image.id)) {
+      setSelectedImage(selectedImage.filter((id) => id !== image.id));
+    } else {
+      setSelectedImage([...selectedImage, image.id]);
+    }
+  }
+
   if (images.length === 0)
     return (
       <Card className="p-12 text-center">
@@ -81,6 +94,11 @@ export default function ImageViewSection({
             className="group overflow-hidden py-0 transition-shadow hover:shadow-md"
           >
             <div className="bg-secondary/30 relative aspect-square overflow-hidden">
+              <Checkbox
+                className="group-hover:border-input absolute top-2 left-2 z-20 border-black"
+                checked={selectedImage.includes(image.id)}
+                onCheckedChange={() => handleSelectImage(image)}
+              />
               <img
                 src={image.url}
                 alt={image.id}
@@ -128,6 +146,10 @@ export default function ImageViewSection({
         <Card key={image.id} className="py-0 transition-shadow hover:shadow-md">
           <CardContent className="p-6">
             <div className="flex items-center gap-4">
+              <Checkbox
+                checked={selectedImage.includes(image.id)}
+                onCheckedChange={() => handleSelectImage(image)}
+              />
               <div className="bg-secondary/30 h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg">
                 <img
                   src={image.url}

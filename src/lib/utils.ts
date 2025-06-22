@@ -15,6 +15,7 @@ export function prompt(prompt: string) {
   1.  Image Type: Single Image: Output must be a single, standalone image. Do not generate grids, multiple variations, or collages.
   2.  Background: Solid White: The background must be entirely and uniformly white. No textures, gradients, or off-white shades.
   3.  Line Art Quality: Clear & Crisp: Lines must be black, clear, crisp, and well-defined.
+  4.  The drawing must not be cropped and the entire drawing must be visible in the image!!
      
   Your Task:
   Carefully analyze the user's input below and generate a colouring page that adheres to all the above requirements and guidelines. Prioritize "colorability" and clarity.

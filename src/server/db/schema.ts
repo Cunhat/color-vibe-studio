@@ -150,7 +150,7 @@ export const bookImageRelations = relations(bookImage, ({ one }) => ({
 
 export const prompt = createTable("prompt", (d) => ({
   id: d.uuid("id").primaryKey().defaultRandom().notNull(),
-  prompt: d.varchar({ length: 256 }).notNull(),
+  prompt: d.varchar({ length: 1024 }).notNull(),
   createdAt: d
     .timestamp({ withTimezone: true })
     .default(sql`CURRENT_TIMESTAMP`)

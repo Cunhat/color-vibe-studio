@@ -6,6 +6,7 @@ import { api } from "@/trpc/react";
 import { BookIcon, ImageIcon } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
+import dayjs from "dayjs";
 
 export function RecentBookSection() {
   return (
@@ -60,7 +61,7 @@ function RecentBookSectionSuspense() {
               <CardContent className="">
                 <h3 className="line-clamp-1 font-medium">{book.title}</h3>
                 <p className="text-muted-foreground mt-1 text-xs">
-                  {new Date(book.createdAt).toLocaleDateString()}
+                  {dayjs(book.createdAt).format("DD MMM YYYY")}
                 </p>
               </CardContent>
             </Card>
