@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { book } from "@/server/db/schema";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { desc } from "drizzle-orm";
 
 export const bookRouter = createTRPCRouter({
@@ -37,4 +37,14 @@ export const bookRouter = createTRPCRouter({
       limit: 3,
     });
   }),
+  getBookById: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return await ctx.db.query.book.findFirst({
+        where: and(eq(book.id, input.id), eq(book.userId, ctx.session.user.id)),
+        with: {
+          images: true,
+        },
+      });
+    }),
 });

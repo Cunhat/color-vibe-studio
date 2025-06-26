@@ -1,12 +1,18 @@
-import BooksView from "@/modules/dashboard/views/books-view";
-import { auth } from "@/server/auth";
+import { BookView } from "@/modules/dashboard/views/book-view";
 import { api, HydrateClient } from "@/trpc/server";
+import { auth } from "@/server/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
-export default async function Books() {
+export default async function Book({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -15,11 +21,11 @@ export default async function Books() {
     redirect("/signin");
   }
 
-  void api.book.getBooks.prefetch();
+  void api.book.getBookById.prefetch({ id });
 
   return (
     <HydrateClient>
-      <BooksView />
+      <BookView id={id} />
     </HydrateClient>
   );
 }
