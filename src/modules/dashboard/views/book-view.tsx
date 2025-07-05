@@ -29,6 +29,8 @@ export function BookView({ id }: BookViewProps) {
 function BookViewSuspense({ id }: BookViewProps) {
   const [book] = api.book.getBookById.useSuspenseQuery({ id });
 
+  console.log(book);
+
   if (!book) {
     return <div>Book not found</div>;
   }

@@ -8,6 +8,7 @@ import type { ImageWithPrompt } from "@/lib/schemas";
 import { Button } from "@/components/ui/button";
 import { Book, Save, Trash, Trash2 } from "lucide-react";
 import DeleteRecentImages from "../sections/image/delete-recent-images";
+import AddToBook from "../components/add-to-book";
 
 export function ImageView() {
   return (
@@ -34,10 +35,7 @@ function ImageViewSuspense() {
             <Save className="h-4 w-4" />
             Download
           </Button>
-          <Button variant="outline" size="sm">
-            <Book className="h-4 w-4" />
-            Add to Book
-          </Button>
+          <AddToBook selectedImage={selectedImage} />
           <DeleteRecentImages selectedImages={selectedImage} />
         </div>
       )}
