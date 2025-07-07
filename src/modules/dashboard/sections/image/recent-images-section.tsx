@@ -39,9 +39,8 @@ function RecentImagesSectionSuspense() {
     <div>
       <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold">
         <GalleryVerticalIcon className="h-5 w-5" />
-        Recent Images
+        Your Recent Images
       </h2>
-
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {images.slice(0, 4).map((image) => (
           <Card

@@ -3,6 +3,7 @@ import { RecentBookSection } from "../sections/book/recent-book-section";
 import HeaderSection from "../sections/header-section";
 import { RecentImagesSection } from "../sections/image/recent-images-section";
 import QuickActionsSection from "../sections/quick-actions-section";
+import { CommunityImages } from "../sections/image/community-images";
 
 interface DashboardViewProps {
   user: User;
@@ -17,9 +18,11 @@ export default function DashboardView({ user }: DashboardViewProps) {
         {/* Quick Actions */}
         <QuickActionsSection />
         {/* Recent Books */}
-        <RecentBookSection />
+        {/* <RecentBookSection /> */}
         {/* Recent Images */}
         <RecentImagesSection />
+        {/* Community Images */}
+        <CommunityImages />
       </div>
     </div>
   );

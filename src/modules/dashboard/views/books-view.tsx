@@ -12,7 +12,6 @@ export default function BooksView() {
             Create and manage your coloring book collections
           </p>
         </div>
-
         <CreateBookSection />
       </div>
       <BookList />

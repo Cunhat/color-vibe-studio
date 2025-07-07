@@ -1,29 +1,28 @@
-import DashboardView from "@/modules/dashboard/views/dashboard-view";
+import CommunityView from "@/modules/dashboard/views/community-view";
 import { auth } from "@/server/auth";
 import { api, HydrateClient } from "@/trpc/server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import React from "react";
 
 export const dynamic = "force-dynamic";
 
-export default async function Dashboard() {
+export default async function Community() {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
 
   if (!session) {
-    redirect("/login");
+    redirect("/signin");
   }
 
-  void api.image.getRecentImages.prefetch();
-  void api.book.getRecentBooks.prefetch();
   void api.image.getLastCommunityImages.prefetch({
     limit: 4,
   });
 
   return (
     <HydrateClient>
-      <DashboardView user={session.user} />
+      <CommunityView />
     </HydrateClient>
   );
 }
