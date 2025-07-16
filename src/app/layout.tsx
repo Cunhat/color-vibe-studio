@@ -1,6 +1,7 @@
 import "@/styles/globals.css";
 import { TRPCReactProvider } from "@/trpc/react";
 import { type Metadata } from "next";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -14,7 +15,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <TRPCReactProvider>{children}</TRPCReactProvider>
+        <TRPCReactProvider>
+          <NuqsAdapter>{children}</NuqsAdapter>
+        </TRPCReactProvider>
       </body>
     </html>
   );

@@ -3,7 +3,7 @@ import { createTRPCRouter } from "../trpc";
 
 import { protectedProcedure } from "../trpc";
 import { and, desc, eq, inArray, lt, type InferSelectModel } from "drizzle-orm";
-import { image, prompt } from "@/server/db/schema";
+import { bookImage, image, prompt } from "@/server/db/schema";
 
 export const imageRouter = createTRPCRouter({
   getImages: protectedProcedure.query(async ({ ctx }) => {
@@ -15,7 +15,6 @@ export const imageRouter = createTRPCRouter({
       orderBy: [desc(image.createdAt)],
     });
   }),
-
   getRecentImages: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.db.query.image.findMany({
       where: eq(image.userId, ctx.session.user.id),
@@ -82,5 +81,30 @@ export const imageRouter = createTRPCRouter({
         images: items,
         nextCursor,
       };
+    }),
+  getImagesByBookId: protectedProcedure
+    .input(z.object({ id: z.string().optional() }))
+    .query(async ({ ctx, input }) => {
+      if (!input.id) {
+        return await ctx.db.query.image.findMany({
+          where: eq(image.userId, ctx.session.user.id),
+          with: {
+            prompt: true,
+          },
+        });
+      }
+
+      const bookImages = await ctx.db.query.bookImage.findMany({
+        where: eq(bookImage.bookId, input.id),
+        with: {
+          image: {
+            with: {
+              prompt: true,
+            },
+          },
+        },
+      });
+
+      return bookImages.map((bookImage) => bookImage.image);
     }),
 });

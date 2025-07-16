@@ -6,16 +6,26 @@ import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
-export default async function Images() {
+export default async function Images({
+  searchParams,
+}: {
+  searchParams: Promise<{ bookId: string | undefined }>;
+}) {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
+
+  const { bookId } = await searchParams;
+
+  console.log("searchParams", bookId);
 
   if (!session) {
     redirect("/signin");
   }
 
   void api.image.getImages.prefetch();
+  void api.book.getBooks.prefetch();
+  void api.image.getImagesByBookId.prefetch({ id: bookId });
 
   return (
     <HydrateClient>

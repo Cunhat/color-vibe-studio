@@ -1,13 +1,15 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import type { ImageWithPrompt } from "@/lib/schemas";
+import { api } from "@/trpc/react";
+import { Book, Save } from "lucide-react";
+import { useQueryState } from "nuqs";
+import { Suspense, useState } from "react";
+import DeleteRecentImages from "../sections/image/delete-recent-images";
 import ImageHeaderSection from "../sections/image/image-header-section";
 import ImageViewSection from "../sections/image/image-view-section";
-import { api } from "@/trpc/react";
-import type { ImageWithPrompt } from "@/lib/schemas";
-import { Button } from "@/components/ui/button";
-import { Book, Save, Trash, Trash2 } from "lucide-react";
-import DeleteRecentImages from "../sections/image/delete-recent-images";
+import { BookFilterItem } from "../components/book-filter-item";
 
 export function ImageView() {
   return (
@@ -22,8 +24,14 @@ function ImageViewSuspense() {
   const [selectedImage, setSelectedImage] = useState<
     Array<ImageWithPrompt["id"]>
   >([]);
+  const [bookId, setBookId] = useQueryState("bookId");
 
-  const [image] = api.image.getImages.useSuspenseQuery();
+  const [books] = api.book.getBooks.useSuspenseQuery();
+  const [images] = api.image.getImagesByBookId.useSuspenseQuery({
+    id: bookId ?? undefined,
+  });
+
+  console.log("images", images);
 
   return (
     <div className="container flex-1 px-4 py-8 md:py-12">
@@ -41,12 +49,34 @@ function ImageViewSuspense() {
           <DeleteRecentImages selectedImages={selectedImage} />
         </div>
       )}
-      <ImageViewSection
-        viewMode={viewMode}
-        images={image}
-        selectedImage={selectedImage}
-        setSelectedImage={setSelectedImage}
-      />
+      <div className="grid grid-cols-[200px_1fr] gap-4">
+        <div className="flex flex-col gap-2">
+          <h2 className="text-lg font-bold">Books</h2>
+          <BookFilterItem
+            book={{
+              id: "all",
+              title: "All Books",
+              images: [],
+            }}
+            onClick={() => setBookId(null)}
+            isSelected={!bookId}
+          />
+          {books.map((book) => (
+            <BookFilterItem
+              key={book.id}
+              book={book}
+              onClick={() => setBookId(book.id)}
+              isSelected={book.id === bookId}
+            />
+          ))}
+        </div>
+        <ImageViewSection
+          viewMode={viewMode}
+          images={images}
+          selectedImage={selectedImage}
+          setSelectedImage={setSelectedImage}
+        />
+      </div>
     </div>
   );
 }

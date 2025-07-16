@@ -38,8 +38,17 @@ export const bookRouter = createTRPCRouter({
     });
   }),
   getBookById: protectedProcedure
-    .input(z.object({ id: z.string() }))
+    .input(z.object({ id: z.string().optional() }))
     .query(async ({ ctx, input }) => {
+      if (!input.id) {
+        return await ctx.db.query.book.findMany({
+          where: eq(book.userId, ctx.session.user.id),
+          with: {
+            images: true,
+          },
+        });
+      }
+
       return await ctx.db.query.book.findFirst({
         where: and(eq(book.id, input.id), eq(book.userId, ctx.session.user.id)),
         with: {
