@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import type { ImageWithPrompt } from "@/lib/schemas";
 import { api } from "@/trpc/react";
-import { Book, Loader, Save } from "lucide-react";
+import { Book, Save, Loader } from "lucide-react";
 import { useQueryState } from "nuqs";
 import { useState } from "react";
 import BookListSidebar from "../sections/book/book-list-sidebar";
@@ -23,7 +23,7 @@ export function ImageView() {
   });
 
   return (
-    <div className="container flex-1 px-4 py-8 md:py-12">
+    <div className="container flex-1 px-4 py-6">
       <ImageHeaderSection viewMode={viewMode} setViewMode={setViewMode} />
       {!!selectedImage?.length && (
         <div className="bg-primary/10 border-primary/50 mb-4 flex justify-end gap-2 rounded-xl border p-4">
@@ -42,8 +42,8 @@ export function ImageView() {
         <BookListSidebar />
         {imagesQuery.isLoading ? (
           <div className="flex h-full items-center justify-center gap-2">
-            <Loader className="size-6 animate-spin" />
-            <h1 className="text-lg">Loading...</h1>
+            <Loader className="text-primary size-6 animate-spin" />
+            <h1 className="text-muted-foreground">Loading images...</h1>
           </div>
         ) : (
           <ImageViewSection

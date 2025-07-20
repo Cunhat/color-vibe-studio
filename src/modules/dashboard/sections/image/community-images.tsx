@@ -26,7 +26,7 @@ function CommunityImagesSuspense() {
       <header className="flex items-center justify-between">
         <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold">
           <UsersRound className="h-5 w-5" />
-          Our Community Images
+          Explore Community Images
         </h2>
         <Link href="/dashboard/community">
           <Button variant="link">View All</Button>
