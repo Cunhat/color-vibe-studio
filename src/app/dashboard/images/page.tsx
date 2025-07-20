@@ -17,8 +17,6 @@ export default async function Images({
 
   const { bookId } = await searchParams;
 
-  console.log("searchParams", bookId);
-
   if (!session) {
     redirect("/signin");
   }

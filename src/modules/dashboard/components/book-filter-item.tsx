@@ -13,22 +13,26 @@ const BookFilterStyle = cva(
   },
 );
 
+type BookFilterItemProps = {
+  book: Book;
+  onClick: () => void;
+  isSelected: boolean;
+  showCount?: boolean;
+};
+
 export function BookFilterItem({
   book,
   onClick,
   isSelected,
-}: {
-  book: Book;
-  onClick: () => void;
-  isSelected: boolean;
-}) {
+  showCount = true,
+}: BookFilterItemProps) {
   return (
     <div
       onClick={onClick}
       className={BookFilterStyle({ isSelected: isSelected })}
     >
       <h3 className="text-sm">{book.title}</h3>
-      <p>{book.images.length}</p>
+      {showCount && <p>{book.images.length}</p>}
     </div>
   );
 }
