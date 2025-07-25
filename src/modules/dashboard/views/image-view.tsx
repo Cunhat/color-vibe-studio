@@ -24,7 +24,10 @@ export function ImageView() {
   return (
     <div className="relative container flex-1 px-4 py-6">
       <ImageHeaderSection viewMode={viewMode} setViewMode={setViewMode} />
-      <ImageActionBar selectedImages={selectedImage} />
+      <ImageActionBar
+        selectedImages={selectedImage}
+        images={imagesQuery.data ?? []}
+      />
       <div className="grid grid-cols-[200px_1fr] gap-4">
         <BookListSidebar />
         {imagesQuery.isLoading ? (
