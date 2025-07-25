@@ -1,13 +1,12 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import type { ImageWithPrompt } from "@/lib/schemas";
 import { api } from "@/trpc/react";
-import { Book, Save, Loader } from "lucide-react";
+import { Loader } from "lucide-react";
 import { useQueryState } from "nuqs";
 import { useState } from "react";
+import ImageActionBar from "../components/image-action-bar";
 import BookListSidebar from "../sections/book/book-list-sidebar";
-import DeleteRecentImages from "../sections/image/delete-recent-images";
 import ImageHeaderSection from "../sections/image/image-header-section";
 import ImageViewSection from "../sections/image/image-view-section";
 
@@ -23,21 +22,9 @@ export function ImageView() {
   });
 
   return (
-    <div className="container flex-1 px-4 py-6">
+    <div className="relative container flex-1 px-4 py-6">
       <ImageHeaderSection viewMode={viewMode} setViewMode={setViewMode} />
-      {!!selectedImage?.length && (
-        <div className="bg-primary/10 border-primary/50 mb-4 flex justify-end gap-2 rounded-xl border p-4">
-          <Button variant="outline" size="sm">
-            <Save className="h-4 w-4" />
-            Download
-          </Button>
-          <Button variant="outline" size="sm">
-            <Book className="h-4 w-4" />
-            Add to Book
-          </Button>
-          <DeleteRecentImages selectedImages={selectedImage} />
-        </div>
-      )}
+      <ImageActionBar selectedImages={selectedImage} />
       <div className="grid grid-cols-[200px_1fr] gap-4">
         <BookListSidebar />
         {imagesQuery.isLoading ? (
