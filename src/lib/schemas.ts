@@ -1,5 +1,5 @@
 import type { AppRouter } from "@/server/api/root";
-import { image, prompt } from "@/server/db/schema";
+import { book, image, prompt } from "@/server/db/schema";
 import type { inferRouterOutputs } from "@trpc/server";
 import { createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
@@ -15,3 +15,5 @@ type RouterOutputs = inferRouterOutputs<AppRouter>;
 type GetImagesOutput = RouterOutputs["image"]["getImages"];
 
 export type ImageWithPrompt = GetImagesOutput[number];
+
+export type Book = RouterOutputs["book"]["getBooks"][number];

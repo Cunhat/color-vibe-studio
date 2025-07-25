@@ -25,14 +25,9 @@ export default function BookListSidebar() {
     <div className="flex flex-col gap-2">
       <h2 className="text-lg font-bold">Books</h2>
       <BookFilterItem
-        book={{
-          id: "all",
-          title: "All Books",
-          images: [],
-        }}
         onClick={() => setBookId(null)}
         isSelected={!bookId}
-        showCount={false}
+        isAllOption
       />
       {booksQuery.data?.map((book) => (
         <BookFilterItem

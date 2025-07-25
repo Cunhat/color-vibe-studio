@@ -13,26 +13,38 @@ const BookFilterStyle = cva(
   },
 );
 
-type BookFilterItemProps = {
-  book: Book;
-  onClick: () => void;
-  isSelected: boolean;
-  showCount?: boolean;
-};
+type BookFilterItemProps =
+  | {
+      book: Book;
+      onClick: () => void;
+      isSelected: boolean;
+      isAllOption?: false;
+    }
+  | {
+      onClick: () => void;
+      isSelected: boolean;
+      isAllOption: true;
+    };
 
-export function BookFilterItem({
-  book,
-  onClick,
-  isSelected,
-  showCount = true,
-}: BookFilterItemProps) {
+export function BookFilterItem(props: BookFilterItemProps) {
+  if (!props.isAllOption) {
+    return (
+      <div
+        onClick={props.onClick}
+        className={BookFilterStyle({ isSelected: props.isSelected })}
+      >
+        <h3 className="text-sm">{props.book.title}</h3>
+        <p>{props.book.images.length}</p>
+      </div>
+    );
+  }
+
   return (
     <div
-      onClick={onClick}
-      className={BookFilterStyle({ isSelected: isSelected })}
+      onClick={props.onClick}
+      className={BookFilterStyle({ isSelected: props.isSelected })}
     >
-      <h3 className="text-sm">{book.title}</h3>
-      {showCount && <p>{book.images.length}</p>}
+      <h3 className="text-sm">All Books</h3>
     </div>
   );
 }
