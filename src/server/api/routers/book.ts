@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
-import { book } from "@/server/db/schema";
-import { and, eq } from "drizzle-orm";
+import { book, bookImage } from "@/server/db/schema";
+import { and, eq, inArray } from "drizzle-orm";
 import { desc } from "drizzle-orm";
 
 export const bookRouter = createTRPCRouter({
@@ -55,5 +55,25 @@ export const bookRouter = createTRPCRouter({
           images: true,
         },
       });
+    }),
+  addImagesToBook: protectedProcedure
+    .input(z.object({ bookId: z.string(), imageIds: z.array(z.string()) }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db
+        .delete(bookImage)
+        .where(
+          and(
+            eq(bookImage.userId, ctx.session.user.id),
+            inArray(bookImage.imageId, input.imageIds),
+          ),
+        );
+
+      await ctx.db.insert(bookImage).values(
+        input.imageIds.map((imageId) => ({
+          bookId: input.bookId,
+          imageId,
+          userId: ctx.session.user.id,
+        })),
+      );
     }),
 });

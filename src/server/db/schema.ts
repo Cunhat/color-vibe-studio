@@ -126,6 +126,10 @@ export const bookImage = createTable(
       .timestamp({ withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
+    userId: d
+      .text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
   }),
   (t) => [
     index("book_image_book_id_idx").on(t.bookId),

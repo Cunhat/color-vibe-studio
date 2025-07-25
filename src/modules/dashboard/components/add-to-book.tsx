@@ -29,7 +29,8 @@ import {
 } from "@/components/ui/select";
 import { api } from "@/trpc/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Book } from "lucide-react";
+import { Book, Loader, Loader2 } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { z } from "zod";
@@ -45,6 +46,9 @@ const AddToBookSchema = z.object({
 type AddToBookFormType = z.infer<typeof AddToBookSchema>;
 
 export default function AddToBook({ selectedImages }: AddToBookProps) {
+  const [open, setOpen] = useState(false);
+  const utils = api.useUtils();
+
   const booksQuery = api.book.getBooks.useQuery();
 
   const form = useForm<AddToBookFormType>({
@@ -54,12 +58,24 @@ export default function AddToBook({ selectedImages }: AddToBookProps) {
     },
   });
 
+  const addImagesToBookMutation = api.book.addImagesToBook.useMutation({
+    onSuccess: () => {
+      form.reset();
+      setOpen(false);
+      utils.book.getBooks.invalidate();
+      utils.image.getImagesByBookId.invalidate();
+    },
+  });
+
   function onSubmit(data: AddToBookFormType) {
-    console.log(data);
+    addImagesToBookMutation.mutate({
+      bookId: data.book,
+      imageIds: selectedImages,
+    });
   }
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" size="sm">
           <Book className="h-4 w-4" />
@@ -110,9 +126,24 @@ export default function AddToBook({ selectedImages }: AddToBookProps) {
             />
             <DialogFooter>
               <DialogClose asChild>
-                <Button variant="outline">Cancel</Button>
+                <Button
+                  variant="outline"
+                  disabled={addImagesToBookMutation.isPending}
+                >
+                  Cancel
+                </Button>
               </DialogClose>
-              <Button type="submit">Add to Book</Button>
+              <Button
+                type="submit"
+                disabled={addImagesToBookMutation.isPending}
+              >
+                {addImagesToBookMutation.isPending && (
+                  <Loader className="h-4 w-4 animate-spin" />
+                )}
+                {addImagesToBookMutation.isPending
+                  ? "Adding to Book..."
+                  : "Add to Book"}
+              </Button>
             </DialogFooter>
           </form>
         </Form>
