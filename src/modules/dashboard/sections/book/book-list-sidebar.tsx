@@ -4,6 +4,7 @@ import React from "react";
 import { BookFilterItem } from "../../components/book-filter-item";
 import { useQueryState } from "nuqs";
 import { Skeleton } from "@/components/ui/skeleton";
+import CreateBookSection from "../create-book-section";
 
 export default function BookListSidebar() {
   const [bookId, setBookId] = useQueryState("bookId");
@@ -37,6 +38,7 @@ export default function BookListSidebar() {
           isSelected={book.id === bookId}
         />
       ))}
+      <CreateBookSection />
     </div>
   );
 }

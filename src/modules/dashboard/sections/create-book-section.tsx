@@ -75,7 +75,9 @@ export default function CreateBookSection() {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button className="mt-4 md:mt-0">Create New Book</Button>
+        <Button variant="outline" className="mt-4 md:mt-0">
+          Create Book
+        </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -85,7 +87,7 @@ export default function CreateBookSection() {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
               name="title"
